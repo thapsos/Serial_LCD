@@ -1,15 +1,14 @@
 // 
 // 4D Systems μLCD-μLED-μVGA Serial_LCD Library Suite
-// Arduino 0023 chipKIT MPIDE 0023 Library
-// ----------------------------------
+// Arduino 1.0 Library
 //
-// Feb 01, 2012 release 106
+// Mar 19, 2012 release 207
 // see README.txt
 //
 // © Rei VILO, 2010-2012
 // CC = BY NC SA
 // http://sites.google.com/site/vilorei/
-// http://github.com/rei-vilo/Serial_LCD
+// https://sites.google.com/site/vilorei/arduino/13--serial-touch-320x240-lcd-screen
 //
 //
 // Based on
@@ -20,17 +19,19 @@
 // http://www.4d-Labs.com
 //
 //
-#define PROXYSERIAL_RELEASE 106
+#define PROXYSERIAL_RELEASE 207
 
-#include "WProgram.h"
+#include "Arduino.h"
 #include "Stream.h"
 
-#define securityDelay 0
+// SoftwareSerial 1.0 seems to require a delay
+#define securityDelay 2
 
 #ifndef proxy_Serial_h
 #define proxy_Serial_h
 
 // Utilities
+
 // float to string
 String ftoa(float number, uint8_t precision=0, uint8_t size=0);
 
@@ -39,6 +40,7 @@ String htoa(uint32_t number, uint8_t size=0);
 
 // time is ms to string
 String ttoa(float number, uint8_t precision=0, uint8_t size=0);
+
 
 // Objects
 
@@ -65,7 +67,7 @@ public:
 private:
     uint16_t _millis;
     void _checkSpeed();
-    boolean _XY16;
+    bool _XY16;
     Stream * _proxyPort;
 };
 

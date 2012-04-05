@@ -1,15 +1,14 @@
 // 
 // 4D Systems μLCD-μLED-μVGA Serial_LCD Library Suite
-// Arduino 0023 chipKIT MPIDE 0023 Library
-// ----------------------------------
+// Arduino 1.0 Library
 //
-// Mar 13, 2012 release 122
+// Mar 19, 2012 release 223
 // see README.txt
 //
 // © Rei VILO, 2010-2012
 // CC = BY NC SA
 // http://sites.google.com/site/vilorei/
-// http://github.com/rei-vilo/Serial_LCD
+// https://sites.google.com/site/vilorei/arduino/13--serial-touch-320x240-lcd-screen
 //
 //
 // Based on
@@ -20,17 +19,17 @@
 // http://www.4d-Labs.com
 //
 //
-#define SERIAL_LCD_RELEASE 122
+#define SERIAL_LCD_RELEASE 223
 
 #ifndef Serial_LCD_h
 #define Serial_LCD_h
 
-#include "WProgram.h"
+#include "Arduino.h"
 #include "proxySerial.h"
 
 // Test release
-#if PROXYSERIAL_RELEASE < 106
-#error required PROXYSERIAL_RELEASE 106
+#if PROXYSERIAL_RELEASE < 207
+#error required PROXYSERIAL_RELEASE 207
 #endif
 
 
@@ -86,8 +85,9 @@ public:
     // Draw User Bitmap Character – 44hex 
     uint8_t circle(uint16_t x1, uint16_t y1, uint16_t radius, uint16_t colour);  // Draw Circle – 43hex 
     uint8_t triangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t x3, uint16_t y3, uint16_t colour);  // Draw Triangle – 47hex 
-                                                                                                                      // Draw Image-Icon – 49hex 
-    uint8_t setBackGroundColour(uint16_t colour=blackColour);   // Set Background colour – 4Bhex 
+    
+    // Draw Image-Icon – 49hex 
+    uint8_t setBackGroundColour(uint16_t colour);   // Set Background colour – 4Bhex 
     uint8_t dLine(uint16_t x0, uint16_t y0, uint16_t dx, uint16_t dy, uint16_t colour);  // Draw Line – 4Chex 
     uint8_t line(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t colour);  // Draw Line – 4Chex 
                                                                                         // Draw Polygon – 67hex 
@@ -97,23 +97,26 @@ public:
     uint8_t point(uint16_t x1, uint16_t y1, uint16_t colour);   // Draw Pixel – 50hex 
     uint16_t readPixel(uint16_t x1, uint16_t y1); // Read Pixel – 52hex 
     uint8_t copyPaste(uint16_t xs, uint16_t ys, uint16_t xt, uint16_t yt, uint16_t dx, uint16_t dy); // Screen Copy-Paste – 63hex 
-                                                                                                     // Replace colour – 6Bhex 
+    
+    // Replace colour – 6Bhex 
     uint8_t setPenSolid(boolean b=true);    // Set Pen Size 1=solid; 0=wire frame – 70hex
     
     // 2.3 Text Commands
     uint8_t setFont(uint8_t b=0);  // Set Font – 46hex 
     uint8_t setFontSolid(boolean b=true);  // Set 0=Transparent-1=Opaque Text – 4Fhex 
-                                      // Draw ASCII Character (text format) – 54hex 
-                                      // Draw ASCII Character (graphics format) – 74hex 
+                                           // Draw ASCII Character (text format) – 54hex 
+                                           // Draw ASCII Character (graphics format) – 74hex 
     uint8_t tText(uint8_t x, uint8_t y, String s, uint16_t colour=whiteColour);  // Draw “String” of ASCII Text (text format) – 73hex 
     uint8_t gText(uint16_t x, uint16_t y, String s, uint16_t colour=whiteColour);    // Draw “String” of ASCII Text (graphics format) – 53hex 
-                                                                                     // Draw Text Button – 62hex
+    
+    // Draw Text Button – 62hex
     
     // 2.4 Touch Screen Commands
     // Touch screen must be enabled to be able to use the touch commands. 
     uint8_t getTouchActivity();   // Get Touch Coordinates - 6Fhex - 0 : No Touch Activity 1 : Touch Press 2 : Touch Release 3 : Touch Moving
     uint8_t getTouchXY(uint16_t &x, uint16_t &y);   // Get Touch Coordinates - 6Fhex 
-                                                    // Wait Until Touch - 77hex 
+    
+    // Wait Until Touch - 77hex 
     uint8_t dDetectTouchRegion(uint16_t x0, uint16_t y0, uint16_t dx, uint16_t dy);
     uint8_t detectTouchRegion(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2); // Detect Touch Region - 75hex
     
@@ -142,7 +145,6 @@ public:
     boolean checkRAW(); // is RAW partition available?
     boolean checkFAT(); // is FAT partition available?
     
-    //    void setRAW(boolean b);
     // Read File from Card (FAT) - @61hex with open...next loop: caution, no screen releated function in the loop 
     uint8_t openTextFileDelimiter(String filename, char delimiter);
     boolean nextTextFileDelimiter(String * result); // false = end
@@ -150,7 +152,6 @@ public:
     // Read File from Card (FAT) - @61hex with call-back
     uint8_t readTextFileDelimiter(String filename, char delimiter, void (*cbReadFile)(String text));
     uint8_t readTextFile(String filename, uint8_t bytes, void (*cbReadFile)(String text));
-
     // Write File to Card (FAT) - @74hex 
     uint8_t writeStringFile(String filename, String text, uint8_t option=0x00);   
     uint8_t appendStringFile(String filename, String text);
@@ -162,7 +163,8 @@ public:
     uint8_t readScreenFAT(String filename, uint16_t x1=0, uint16_t y1=0); // x1, y1: left-top coordinates
     uint8_t readScreenGCI(String filename, uint16_t x1=0, uint16_t y1=0, uint16_t msb2=0, uint16_t lsb2=0); // x1, y1: left-top coordinates; msb2:lsb2 icon sector address
     uint8_t playSoundSD(String filename, uint8_t option0=0);  // Play Audio WAV file from Card (FAT) - @6Chex 
-                                                              // Run Script (4DSL) Program from Card (FAT) - @70hex
+    
+    // Run Script (4DSL) Program from Card (FAT) - @70hex
     
     // Utilities
     uint16_t setColour(uint8_t red, uint8_t green, uint8_t blue);

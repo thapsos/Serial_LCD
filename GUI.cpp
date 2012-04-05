@@ -1,15 +1,14 @@
 // 
 // 4D Systems μLCD-μLED-μVGA Serial_LCD Library Suite
-// Arduino 0023 chipKIT MPIDE 0023 Library
-// ----------------------------------
+// Arduino 1.0 Library
 //
-// Jan 28, 2012 release 108 
+// Mar 25, 2012 release 210
 // see README.txt
 //
 // © Rei VILO, 2010-2012
 // CC = BY NC SA
 // http://sites.google.com/site/vilorei/
-// http://github.com/rei-vilo/Serial_LCD
+// https://sites.google.com/site/vilorei/arduino/13--serial-touch-320x240-lcd-screen
 //
 //
 // Based on
@@ -21,7 +20,6 @@
 //
 //
 
-#include "WProgram.h"
 #include "Serial_LCD.h"
 #include "GUI.h"
 
@@ -126,7 +124,7 @@ void button::enable(boolean b1) {
     _enable = b1;
 }
 
-boolean button::check(boolean instant) {
+  boolean button::check(boolean instant) {
     if (!_enable) return false;
     
     uint16_t x0, y0, z0;
@@ -242,7 +240,7 @@ uint8_t dialog(Serial_LCD * lcd0, String text0, uint8_t kind0, uint16_t textColo
     _pscreen->gText(_x0+30- (_pscreen->fontX()>>1)   , _y0+30- (_pscreen->fontY()>>1)   , String(label), colour);          
     _pscreen->gText(_x0+30- (_pscreen->fontX()>>1) +1, _y0+30- (_pscreen->fontY()>>1)   , String(label), colour);          
     _pscreen->gText(_x0+30- (_pscreen->fontX()>>1)   , _y0+30- (_pscreen->fontY()>>1) +1, String(label), colour);          
-    _pscreen->gText(_x0+30- (_pscreen->fontX()>>1) +1, _y0+30- (_pscreen->fontY()>>1) +1, String(label), colour);  
+    _pscreen->gText(_x0+30- (_pscreen->fontX()>>1) +1, _y0+30- (_pscreen->fontY()>>1) +1, String(label), colour);          
     
     button b1;
     button b2;
@@ -490,7 +488,7 @@ void label(Serial_LCD  * lcd0, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y
     }
     _pscreen->setFont(_size);
     _text = text0.substring(0, min(text0.length(), (x2-x1) / _pscreen->fontX()));
-    _text = _text.trim();
+    _text.trim(); // in-place string function
     
     // horizontal 
     // default = 0 = center, 1 = left, 2 = right

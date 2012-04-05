@@ -1,7 +1,6 @@
 // 
 // 4D Systems μLCD-μLED-μVGA Serial_LCD Library Suite
-// Arduino 0023 chipKIT MPIDE 0023 Library
-// ----------------------------------
+// Arduino 1.0 Library
 //
 // Container for objects like C++ vector
 // http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1289151491

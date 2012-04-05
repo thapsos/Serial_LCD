@@ -1,15 +1,14 @@
 // 
 // 4D Systems μLCD-μLED-μVGA Serial_LCD Library Suite
-// Arduino 0023 chipKIT MPIDE 0023 Library
-// ----------------------------------
+// Arduino 1.0 Library
 //
-// Jan 28, 2012 release 108
+// Mar 25, 2012 release 210
 // see README.txt
 //
 // © Rei VILO, 2010-2012
 // CC = BY NC SA
 // http://sites.google.com/site/vilorei/
-// http://github.com/rei-vilo/Serial_LCD
+// https://sites.google.com/site/vilorei/arduino/13--serial-touch-320x240-lcd-screen
 //
 //
 // Based on
@@ -20,14 +19,14 @@
 // http://www.4d-Labs.com
 //
 //
-#define GUI_RELEASE 108
+#define GUI_RELEASE 210
 
-#include "WProgram.h"
+#include "Arduino.h"
 #include "Serial_LCD.h"
 
 // Test release
-#if SERIAL_LCD_RELEASE < 118
-#error required SERIAL_LCD_RELEASE 118
+#if SERIAL_LCD_RELEASE < 223
+#error required SERIAL_LCD_RELEASE 223
 #endif
 
 #ifndef GUI_h

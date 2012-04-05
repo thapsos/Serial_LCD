@@ -1,7 +1,7 @@
 // 
-// μLCD-32PT(SGC) 3.2” Serial LCD Display Module
-// Arduino & chipKIT Library
-//
+// 4D Systems μLCD-μLED-μVGA Serial_LCD Library Suite
+// Arduino 1.0 Library
+// 
 // Example - see README.txt
 // © Rei VILO, 2010-2012
 // CC = BY NC SA
@@ -18,20 +18,15 @@
 //
 //
 
-
-#include "Serial_LCD.h"
-#include "proxySerial.h"
-#include "GUI.h"
-#include "Graphics.h"
+#include "Arduino.h"
 #include "Wire.h"
+#include "Serial_LCD.h"
+#include "GUI.h"
+#include "proxySerial.h"
 
 // test release
-#if GUI_RELEASE < 108
-#error required GUI_RELEASE 108
-#endif
-
-#if GRAPHICS_RELEASE < 107
-#error required GRAPHICS_RELEASE 107
+#if GUI_RELEASE < 209
+#error required GUI_RELEASE 209
 #endif
 
 // === Serial port choice ===
@@ -48,13 +43,11 @@ SoftwareSerial Serial3(2, 3); // RX, TX
 ProxySerial myPort(&Serial3);
 Serial_LCD myLCD(&myPort); 
 
-
 uint16_t x, y;
 uint32_t l;
 
 button b7;
-uint8_t a;
-gGauge myGauge;
+
 
 
 void setup() {
@@ -70,12 +63,10 @@ void setup() {
   Serial.print("hardware\n");
 #endif
   // === End of Serial port initialisation ===
-
+  
   Serial3.begin(9600);
-  myLCD.begin(4);
-
-  Serial.print("begin\n");
-
+  myLCD.begin(4);  // 9600 at start-up
+  
   // === Serial port speed change ===
   myLCD.setSpeed(38400);
 #if defined (__AVR_ATmega328P__) 
@@ -90,69 +81,65 @@ void setup() {
   myLCD.setFontSolid(true);
 
   myLCD.setFont(0);
-  myLCD.gText( 0, 225, myLCD.WhoAmI());
+  myLCD.gText( 0, 210, myLCD.WhoAmI(), 0xffff);
+
   myLCD.setTouch(true);
 
   l=millis();
 
-  b7.dDefine(&myLCD, 0, 0, 70, 40, setItem(0, "Stop"), myLCD.setColour(0xff, 0xff, 0xff), myLCD.setColour(0xff, 0x00, 0x00), myLCD.setColour(0x88, 0x00, 0x00), 9);
+  //    myLCD.setFont(3);
+  //    myLCD.gText(0,  0, "         1         2    ");
+  //    myLCD.gText(0, 20, "12345678901234567890123456"); 
+  //    myLCD.gText(0, 60, ftoa(myLCD.fontX(), 0, 8)); 
+  //
+  //    myLCD.setFont(2);
+  //    myLCD.gText(0,  80, "         1         2         3         4");
+  //    myLCD.gText(0, 100, "1234567890123456789012345678901234567890"); 
+  //    myLCD.gText(0, 120, ftoa(myLCD.fontX(), 0, 8)); 
+
+  myLCD.setFont(1);
+  myLCD.gText(0,  0, "         1         2         3         4");
+  myLCD.gText(0, 20, "1234567890123456789012345678901234567890"); 
+  myLCD.gText(0, 60, ftoa(myLCD.fontX(), 0, 8)); 
+
+  myLCD.setFont(0);
+  myLCD.gText(0,  80, "         1         2         3         4         5");
+  myLCD.gText(0, 100, "12345678901234567890123456789012345678901234567890123"); 
+  myLCD.gText(0, 120, ftoa(myLCD.fontX(), 0, 8)); 
+
+  uint16_t i=9;
+  b7.dDefine(&myLCD,  100, 100, 79, 59, setItem(1, "STOP"), myLCD.setColour(0xff, 0xff, 0xff), myLCD.setColour(0xff, 0x00, 0x00), myLCD.setColour(0x88, 0x00, 0x00), i);
+
   b7.enable(true);
   b7.draw();
-
-  myGauge.define(&myLCD, 169, 120, 60, -2.0, 2.0, 8, 8);
 }
 
-uint32_t ll = 0;
-uint16_t i = 0;
-float v;
+uint8_t c;
 
 void loop() {
-  Serial.print(".");
-  
-  //  // Solution 1
-  //  while (millis()-l<100) {
-  //    v = cos(i*PI/64.0) + 0.3*cos(i*PI/16.0+PI/8.0);
-  //    i++;
-  //    i %= 256;
-  //  }
 
-  // Solution 2
-  v = cos(i*PI/64.0) + 0.3*cos(i*PI/16.0+PI/8.0);
-  i++;
-  i %= 256;
-//  while (millis()-ll<100);
+  c=myLCD.getTouchActivity();
 
-  ll=millis();
-  myGauge.draw( v, ftoa(v, 2, 7) );
-
-//  myLCD.setFont(3);
-//  myLCD.setFontSolid(true);
-//  myLCD.gText( 160, 180, ftoa(v, 2, 10 ));
-
-  if (myLCD.getTouchActivity()>0) {
+  if (c>0) {
     myLCD.getTouchXY(x, y);
     myLCD.setFont(0);
-    myLCD.gText(200, 0, ftoa(x, 0, 5)); 
-    myLCD.gText(200, 15, ftoa(y, 0, 5)); 
+    myLCD.gText(200, 0, ftoa(x, 0, 5), 0xffff); 
+    myLCD.gText(200, 15, ftoa(y, 0, 5)); // , 0xffff by default
 
     // quit
     if (b7.check()) {
       myLCD.off();
       while(true);
-    } // quit
-  } // getTouchActivity
+    }
 
+
+
+  }
   myLCD.setFont(0);
   myLCD.setFontSolid(true);
-  myLCD.gText( 250, 225, ttoa(millis()-l, 0, 6));
+  myLCD.gText( 250, 225, String(millis()-l));
   l=millis();
-
-  //  delay(100);
 }
-
-
-
-
 
 
 
