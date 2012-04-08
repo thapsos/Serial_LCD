@@ -242,10 +242,10 @@ uint8_t Serial_LCD::setTouch(boolean b) {
         _port->print((char)0x00);  // enable touch
         char c=nacAck();
         
-        if (c=0x06) {
+        if (c==0x06) {
             _port->print('Y');
             _port->print((char)0x05);  // full screen active
-            _port->print((char)0x00);
+            _port->print((char)0x02);   // according with the 4D manual should be 0x02.
         }
     } 
     else {
